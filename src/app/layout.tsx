@@ -75,7 +75,7 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
@@ -88,8 +88,8 @@ export default function RootLayout({
           <div className="fixed inset-0 pointer-events-none z-40 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.03)_100%)] dark:bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.6)_100%)]" />
 
           {/* 3. Ambient Glows */}
-          <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-200/40 dark:bg-purple-900/10 blur-[150px] rounded-full pointer-events-none z-0 mix-blend-multiply dark:mix-blend-screen animate-pulse-slow transition-colors duration-500" />
-          <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-cyan-200/40 dark:bg-cyan-900/10 blur-[150px] rounded-full pointer-events-none z-0 mix-blend-multiply dark:mix-blend-screen animate-pulse-slow delayed transition-colors duration-500" />
+          <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] bg-purple-200/40 dark:bg-purple-900/20 blur-[150px] rounded-full pointer-events-none z-0 mix-blend-multiply dark:mix-blend-screen animate-pulse-slow transition-colors duration-500" />
+          <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-cyan-200/40 dark:bg-cyan-900/20 blur-[150px] rounded-full pointer-events-none z-0 mix-blend-multiply dark:mix-blend-screen animate-pulse-slow delayed transition-colors duration-500" />
 
           <div className="relative z-10 w-full mx-auto">
             {children}
