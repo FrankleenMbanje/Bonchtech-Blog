@@ -1,11 +1,12 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { ButtonHTMLAttributes, forwardRef } from 'react';
+import { forwardRef } from 'react';
 
-interface TactileButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface TactileButtonProps extends HTMLMotionProps<"button"> {
     variant?: 'primary' | 'secondary' | 'glass';
+    children: React.ReactNode;
 }
 
 const TactileButton = forwardRef<HTMLButtonElement, TactileButtonProps>(
@@ -22,7 +23,7 @@ const TactileButton = forwardRef<HTMLButtonElement, TactileButtonProps>(
 
         return (
             <motion.button
-                ref={ref}
+                ref={ref as any}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}

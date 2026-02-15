@@ -12,7 +12,7 @@ type MotionWrapperProps = {
 
 export default function MotionWrapper({ children, delay = 0, className = "", type = "slide-up" }: MotionWrapperProps) {
 
-    const variants = {
+    const variants: Record<string, any> = {
         "fade-in": {
             hidden: { opacity: 0 },
             visible: { opacity: 1, transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] } }

@@ -3,8 +3,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, AlertTriangle, Cpu } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { AutomationStatus } from '@/components/LiveAutomationFeed';
+import { cn } from '../lib/utils';
+
+interface AutomationStatus {
+    workflowName: string;
+    status: 'running' | 'success' | 'failed' | 'idle';
+}
 
 export default function DeploymentGuardBadge() {
     const [healingActive, setHealingActive] = useState(false);

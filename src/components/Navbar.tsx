@@ -15,7 +15,7 @@ export default function Navbar() {
         { name: 'Blog', href: '/#blueprints' },
         {
             name: 'Solutions',
-            href: '#',
+            href: '/solutions',
             dropdown: [
                 { name: 'Autonomous Agents', icon: <Cpu size={16} />, desc: 'Self-governing bot swarms' },
                 { name: 'DevOps Healing', icon: <Activity size={16} />, desc: 'Auto-patching infrastructure' },
@@ -23,7 +23,7 @@ export default function Navbar() {
             ]
         },
         { name: 'About', href: '/about' },
-        { name: 'Contact', href: '#' }, // Placeholder
+        { name: 'Contact', href: 'mailto:contact@bonch.tech' },
     ];
 
     return (
