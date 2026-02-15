@@ -1,0 +1,23 @@
+---
+title: "Kubernetes & GitOps: The Deployment Gold Standard"
+date: "2024-05-02"
+description: "Why declarative infrastructure is the only way to manage scale. The synergy between Kubernetes and GitOps workflows."
+image: "/images/blog/k8s-gitops.jpg"
+tags: ["DevOps", "Kubernetes", "GitOps"]
+---
+
+**GitOps** is the operational framework where the state of your infrastructure is defined in a Git repository. **Kubernetes** is the engine that makes that state a reality. Together, they are the gold standard for modern deployment.
+
+## Declarative vs. Imperative
+
+*   **Imperative:** "Run this script to install Nginx." (Fragile, hard to replicate)
+*   **Declarative:** "I want 3 replicas of Nginx version 1.25 running." (Robust, self-healing)
+
+## The GitOps Workflow
+1.  Developer pushes code to Git.
+2.  CI pipeline builds a Docker image.
+3.  CD tool (ArgoCD or Flux) notices the change in the Git repo.
+4.  ArgoCD syncs the Kubernetes cluster to match the Git state.
+
+## Drift Detection
+If someone manually changes a setting on the cluster (e.g., via `kubectl edit`), ArgoCD detects the "drift" from the Git source of truth and automatically reverts it. This enforces consistency and prevents "configuration drift," a major cause of outages.

@@ -1,0 +1,38 @@
+---
+title: "The Rise of Autonomous Coding"
+description: "How we built agents that write their own unit tests."
+date: "2026-01-24"
+category: "Agents"
+author: "Bonch OS"
+image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&q=80&w=800"
+icon: "Terminal"
+---
+
+# The Agentic Shift
+
+In the early days of 2024, coding was a collaborative effort between human and machine. By 2026, the paradigm has shifted entirely. We are no longer just *using* AI to write code; we are building systems that *reason* about code.
+
+At BonchTech, we've deployed a fleet of specialized agents:
+
+1.  **Architect Agent**: Designs high-level system components.
+2.  **Coder Agent**: Implements the logic in TypeScript and Python.
+3.  **Tester Agent**: Typically the most ruthless, writing adversarial tests to break the Coder's work.
+
+## Self-Reflective Loops
+
+The key breakthrough wasn't the LLM itself, but the *loop*. When an agent writes code, it doesn't just output text. It runs the code in a sandboxed environment, captures the stderr, and if it fails, it *reads its own error* and tries again.
+
+```typescript
+async function autonomousFix(code: string, error: string) {
+    const patch = await agent.generatePatch(code, error);
+    return applyPatch(code, patch);
+}
+```
+
+This simple loop, when parallelized across hundreds of instances, creates a development velocity that is simply impossible for humans to match.
+
+## The Human Role
+
+So where do we fit in? We are now the *Directors*. We set the intent, define the constraints, and review the high-level architecture. The agents handle the implementation details, the linting, the testing, and the deployment.
+
+This blog post itself was drafted by an agent, reviewed by a human, and deployed via a self-healing pipeline. Welcome to the future.

@@ -1,0 +1,40 @@
+---
+title: "Securing Your n8n Workflows"
+description: "Best practices for webhook validation and token management."
+date: "2026-01-18"
+category: "Cybersec"
+author: "Analyst"
+image: "https://images.unsplash.com/photo-1563206767-5b1d97289374?auto=format&fit=crop&q=80&w=800"
+icon: "Cpu"
+---
+
+# The Workflow Attack Vector
+
+Automation platforms like n8n are powerful, but they also introduce a new attack surface. If your webhook URL is exposed, an attacker could trigger your workflows, potentially deleting data or consuming expensive API credits.
+
+## 1. Verify the Source
+
+Never trust the payload blindly. Always implement a shared secret check.
+
+In your n8n webhook node, add a "Header Auth" credential. If the client doesn't send the correct `X-Bonch-Token`, the workflow should terminate immediately.
+
+## 2. Payload Validation
+
+Use the `Schema` node (or a `Code` node) to validate the structure of the incoming data. If you expect an email address, ensure it *looks* like an email address before passing it to your CRM.
+
+```javascript
+// Validation Example in n8n Code Node
+const payload = items[0].json;
+if (!payload.email || !payload.email.includes('@')) {
+  throw new Error("Invalid payload: Email is required");
+}
+return items;
+```
+
+## 3. Rate Limiting
+
+Self-hosted n8n instances can be DDOSed easily. Place your n8n instance behind a reverse proxy like Nginx or Traefik and implement strict rate limiting on the `/webhook/*` endpoints.
+
+## Conclusion
+
+Security isn't a feature; it's a process. By treating your automation workflows with the same rigor as your production code, you ensure that your efficiency gains don't become security liabilities.

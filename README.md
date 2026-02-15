@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BonchTech: Agentic IT & Automation Hub
+
+BonchTech is a next-generation personal tech blog and automation hub, demonstrating "Agentic IT" and "Self-Healing Infrastructure" using Next.js 15, React, Tailwind CSS, Framer Motion, and Python.
+
+## Features
+
+*   **Self-Healing Infrastructure**: A Python script monitors system health and triggers n8n workflows to fix issues automatically.
+*   **Live Automation Feed**: Real-time visualization of active n8n workflows via a custom API polling mechanism.
+*   **Agentic Coding**: "Hire My Agent" CTA initiates an AI client onboarding process.
+*   **Neo-Brutalist Design**: Glassmorphism, tactile maximalism, and responsive Bento Grids.
 
 ## Getting Started
 
-First, run the development server:
+1.  **Install Dependencies**:
+    ```bash
+    npm install
+    pip install requests
+    ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2.  **Run Development Server**:
+    ```bash
+    npm run dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000) to view the site.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3.  **Start Self-Healing Monitor**:
+    In a separate terminal, run the monitoring script. This script watches for 500 errors and triggers "healing" workflows.
+    ```bash
+    python monitor-health.py
+    ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4.  **Simulate Activity**:
+    To see the "Live Automation Feed" populated with data immediately, run:
+    ```bash
+    python seed_data.py
+    ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Triggering Self-Healing
 
-## Learn More
+The monitoring script `monitor-health.py` polls `http://localhost:3000`. To test the self-healing feature:
+1.  Ensure `monitor-health.py` is running.
+2.  Navigate to a route that might cause an error or manually stop the Next.js server to simulate downtime.
+3.  Watch the console output of `monitor-health.py` as it detects the issue and sends a webhook to update the dashboard status to "AI Healing in Progress".
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+*   `src/app`: Next.js App Router pages and API routes.
+*   `src/components`: React components including `BentoGrid`, `TactileButton`, and `LiveAutomationFeed`.
+*   `monitor-health.py`: Python script for external health monitoring.
+*   `seed_data.py`: Utility to populate initial automation data.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Technologies
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+*   Next.js 15 (App Router)
+*   Tailwind CSS v4 (Alpha/PostCSS)
+*   Framer Motion
+*   Python (Monitoring)
+*   Lucide React (Icons)

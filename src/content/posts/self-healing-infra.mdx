@@ -1,0 +1,35 @@
+---
+title: "Self-Healing Infrastructure: A Primer"
+description: "Automated rollback strategies using Python and n8n."
+date: "2026-01-22"
+category: "DevOps"
+author: "System"
+image: "https://images.unsplash.com/photo-1667372393119-c8f475629c52?auto=format&fit=crop&q=80&w=800"
+icon: "Shield"
+---
+
+# When the System Fixes Itself
+
+Downtime is inevitable. But prolonged downtime is a choice. In traditional DevOps, an alert wakes up an engineer at 3 AM. In **Agentic DevOps**, the system wakes up, diagnoses the issue, and fixes it before the engineer even checks their phone.
+
+## The Healer Pattern
+
+We use a simple but powerful pattern called the "Healer Loop":
+
+1.  **Monitor**: A Python script polls the health endpoint every 10 seconds.
+2.  **Diagnose**: If a 500 error is detected, the logs are sent to an LLM for analysis.
+3.  **Prescribe**: The LLM suggests a fix (e.g., "Restart the Docker container", "Rollback to commit SHA-123").
+4.  **Act**: n8n executes the prescribed action via SSH or API.
+5.  **Verify**: The Monitor confirms the service is back up.
+
+## Implementation with n8n
+
+Our n8n workflow is the central nervous system. It listens for webhooks from the monitoring script.
+
+![n8n Workflow Diagram](https://n8n.io/blog/content/images/2023/10/screenshot-2023-10-18-at-12.08.35-pm.png)
+
+The workflow has a `Switch` node that routes distinct error types to specialized sub-workflows. Database connection errors trigger a pool restart. Memory leaks trigger a graceful service reboot.
+
+## The Result
+
+Since implementing this self-healing architecture, our Mean Time To Recovery (MTTR) has dropped from 45 minutes to **22 seconds**. The infrastructure isn't just robust; it's antifragile.
