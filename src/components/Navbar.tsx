@@ -1,130 +1,157 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ChevronDown, Terminal, Shield, Cpu, Activity, LogIn, Sun, Moon } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import Image from 'next/image';
+import { Sun, Moon, Menu, X } from 'lucide-react';
 import { useTheme } from "next-themes";
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
-    const [hovered, setHovered] = useState<string | null>(null);
+    const { setTheme, resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 10);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const navLinks = [
-        { name: 'Home', href: '/' },
-        { name: 'Blog', href: '/#blueprints' },
-        {
-            name: 'Solutions',
-            href: '/solutions',
-            dropdown: [
-                { name: 'Autonomous Agents', icon: <Cpu size={16} />, desc: 'Self-governing bot swarms' },
-                { name: 'DevOps Healing', icon: <Activity size={16} />, desc: 'Auto-patching infrastructure' },
-                { name: 'Cyber Sentinel', icon: <Shield size={16} />, desc: '24/7 Threat monitoring' },
-            ]
-        },
-        { name: 'About', href: '/about' },
-        { name: 'Contact', href: 'mailto:contact@bonch.tech' },
+        { href: '/', label: 'Home' },
+        { href: '#articles', label: 'Articles' },
+        { href: '/about', label: 'About' },
     ];
 
     return (
-        <nav className="flex justify-between items-center w-full max-w-7xl mx-auto p-6 z-50 relative">
+        <motion.header
+            initial={{ y: -100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+                scrolled ? 'glass border-b border-border/50 shadow-sm' : 'bg-transparent'
+            }`}
+        >
+            <nav className="max-w-6xl mx-auto px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center gap-2">
+                        <div className="w-8 h-8 relative">
+                            <Image
+                                src="/logo.svg"
+                                alt="BonchTech"
+                                fill
+                                className="object-contain"
+                                priority
+                            />
+                        </div>
+                        <span className="font-bold text-xl text-foreground">BonchTech</span>
+                    </Link>
 
-            {/* 1. Logo Section */}
-            <Link href="/" className="flex items-center gap-2 group">
-                <div className="w-10 h-10 bg-neutral-900 dark:bg-white text-white dark:text-black flex items-center justify-center font-bold text-xl rounded-lg shadow-lg group-hover:scale-105 transition-all duration-300">
-                    B
-                </div>
-                <span className="font-mono font-bold text-lg tracking-widest text-neutral-900 dark:text-white group-hover:text-black dark:group-hover:text-cyan-400 transition-colors">
-                    BONCH_OS
-                </span>
-            </Link>
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex items-center gap-8">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors link-underline"
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+                    </div>
 
-            {/* 2. Center Navigation */}
-            <div className="hidden md:flex items-center gap-8 bg-white/70 dark:bg-black/40 backdrop-blur-md border border-neutral-200 dark:border-white/10 px-8 py-3 rounded-full shadow-sm">
-                {navLinks.map((link) => (
-                    <div
-                        key={link.name}
-                        className="relative"
-                        onMouseEnter={() => setHovered(link.name)}
-                        onMouseLeave={() => setHovered(null)}
-                    >
+                    {/* Actions */}
+                    <div className="flex items-center gap-3">
+                        {/* Theme Toggle */}
+                        {mounted && (
+                            <button
+                                onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+                                className="p-2 rounded-lg hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                                aria-label="Toggle theme"
+                            >
+                                <AnimatePresence mode="wait" initial={false}>
+                                    {resolvedTheme === "dark" ? (
+                                        <motion.div
+                                            key="sun"
+                                            initial={{ scale: 0, rotate: -90 }}
+                                            animate={{ scale: 1, rotate: 0 }}
+                                            exit={{ scale: 0, rotate: 90 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <Sun size={18} />
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key="moon"
+                                            initial={{ scale: 0, rotate: 90 }}
+                                            animate={{ scale: 1, rotate: 0 }}
+                                            exit={{ scale: 0, rotate: -90 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            <Moon size={18} />
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </button>
+                        )}
+
+                        {/* CTA Button */}
                         <Link
-                            href={link.href}
-                            className={cn(
-                                "flex items-center gap-1 text-sm font-medium transition-colors font-mono uppercase tracking-wider",
-                                hovered === link.name
-                                    ? "text-neutral-900 dark:text-white"
-                                    : "text-neutral-500 dark:text-white/60 hover:text-neutral-900 dark:hover:text-white"
-                            )}
+                            href="mailto:contact@bonch.tech"
+                            className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors btn-shine"
                         >
-                            {link.name}
-                            {link.dropdown && (
-                                <ChevronDown
-                                    size={14}
-                                    className={cn("transition-transform duration-300", hovered === link.name ? "rotate-180" : "")}
-                                />
-                            )}
+                            Contact
                         </Link>
 
-                        {/* Dropdown Menu */}
-                        <AnimatePresence>
-                            {link.dropdown && hovered === link.name && (
-                                <motion.div
-                                    initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-64 p-2 bg-white dark:bg-neutral-900 border border-neutral-100 dark:border-white/10 rounded-xl shadow-xl backdrop-blur-xl z-50 overflow-hidden"
-                                >
-                                    <div className="relative z-10 flex flex-col gap-1">
-                                        {link.dropdown.map((item) => (
-                                            <Link
-                                                key={item.name}
-                                                href="#"
-                                                className="flex items-start gap-3 p-3 rounded-lg hover:bg-neutral-50 dark:hover:bg-white/5 transition-colors group/item"
-                                            >
-                                                <div className="mt-0.5 text-neutral-400 dark:text-neutral-500 group-hover/item:text-cyan-600 dark:group-hover/item:text-cyan-400 transition-colors">
-                                                    {item.icon}
-                                                </div>
-                                                <div>
-                                                    <div className="text-neutral-900 dark:text-white text-xs font-bold font-rajdhani uppercase tracking-wide">
-                                                        {item.name}
-                                                    </div>
-                                                    <div className="text-[10px] text-neutral-500 dark:text-neutral-400 font-mono mt-0.5">
-                                                        {item.desc}
-                                                    </div>
-                                                </div>
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
+                        {/* Mobile Menu Button */}
+                        <button
+                            className="md:hidden p-2 rounded-lg hover:bg-secondary text-muted-foreground transition-colors"
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        >
+                            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                        </button>
                     </div>
-                ))}
-            </div>
+                </div>
+            </nav>
 
-            {/* 3. Right Actions */}
-            <div className="flex items-center gap-4">
-                {/* Toggle removed */}
-                <Link
-                    href="#"
-                    className="hidden md:flex items-center gap-2 text-sm font-mono text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white transition-colors"
-                >
-                    <LogIn size={14} />
-                    <span>Login</span>
-                </Link>
-
-                <Link
-                    href="/portfolio"
-                    className="h-10 px-6 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-black text-xs font-bold flex items-center gap-2 cursor-pointer hover:bg-neutral-800 dark:hover:bg-neutral-200 hover:scale-105 transition-all shadow-md"
-                >
-                    <Terminal size={14} />
-                    <span>PORTFOLIO</span>
-                </Link>
-            </div>
-
-        </nav>
+            {/* Mobile Menu */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="md:hidden border-t border-border/50 glass"
+                    >
+                        <div className="px-6 py-4 space-y-3">
+                            {navLinks.map((link) => (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className="block text-base font-medium text-foreground hover:text-primary transition-colors"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    {link.label}
+                                </Link>
+                            ))}
+                            <Link
+                                href="mailto:contact@bonch.tech"
+                                className="block w-full text-center px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors mt-4"
+                                onClick={() => setMobileMenuOpen(false)}
+                            >
+                                Contact
+                            </Link>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </motion.header>
     );
 }
-

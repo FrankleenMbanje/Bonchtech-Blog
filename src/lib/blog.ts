@@ -2,12 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-type Post = {
+export type Post = {
     slug: string;
     frontmatter: {
         title: string;
         description: string;
-        date: string;
+        publishedAt: string;
         category: string;
         author: string;
         image: string;
@@ -40,7 +40,7 @@ export function getPosts(): Post[] {
 
     // Sort posts by date
     return allPostsData.sort((a, b) => {
-        if (a.frontmatter.date < b.frontmatter.date) {
+        if (a.frontmatter.publishedAt < b.frontmatter.publishedAt) {
             return 1;
         } else {
             return -1;
