@@ -3,7 +3,7 @@ import { getPosts } from '@/lib/blog'
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const posts = getPosts()
-    const baseUrl = 'https://bonch.tech' // Update with real domain
+    const baseUrl = 'https://bonchtech.tech'
 
     const blogEntries: MetadataRoute.Sitemap = posts.map((post) => ({
         url: `${baseUrl}/blog/${post.slug}`,

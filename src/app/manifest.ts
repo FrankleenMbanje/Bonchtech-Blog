@@ -2,13 +2,13 @@ import { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'BonchTech | Agentic Automation',
-        short_name: 'BonchTech',
-        description: 'Self-Healing Infrastructure & Agentic Blueprints',
+        name: 'Unplug | Digital Minimalism Blog',
+        short_name: 'Unplug',
+        description: 'Reclaim your attention. Digital minimalism, dumb phones, and intentional living.',
         start_url: '/',
         display: 'standalone',
-        background_color: '#000000',
-        theme_color: '#000000',
+        background_color: '#faf8f5',
+        theme_color: '#5f8d6a',
         icons: [
             {
                 src: '/favicon.ico',

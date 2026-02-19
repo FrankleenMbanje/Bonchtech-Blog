@@ -4,64 +4,76 @@ import { ArrowLeft } from "lucide-react";
 
 export default function AboutPage() {
     return (
-        <main className="min-h-screen bg-black text-white pt-32 pb-20 px-6 overflow-hidden relative">
-            {/* Background with tech-grid overlay */}
-            <div className="absolute inset-0 z-0 bg-neutral-950 pointer-events-none">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50" />
+        <main className="min-h-screen bg-background text-foreground pt-32 pb-20 px-6 overflow-hidden relative">
+            {/* Background */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
             </div>
 
-            <div className="max-w-4xl mx-auto relative z-10">
+            <div className="max-w-3xl mx-auto relative z-10">
                 <MotionWrapper type="fade-in" delay={0.1}>
-                    <Link href="/" className="inline-flex items-center gap-2 text-neutral-500 hover:text-white transition-colors mb-8 font-mono text-xs uppercase tracking-widest">
+                    <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 text-sm">
                         <ArrowLeft className="w-4 h-4" />
-                        Return_to_Base
+                        Back to Home
                     </Link>
                 </MotionWrapper>
 
                 <MotionWrapper type="slide-up" delay={0.2}>
-                    <h1 className="text-6xl md:text-8xl font-bold font-rajdhani mb-8 tracking-tighter text-white">
-                        THE <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">ARCHITECT.</span>
+                    <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight font-serif">
+                        About <span className="text-gradient">Unplug.</span>
                     </h1>
                 </MotionWrapper>
 
-                <div className="space-y-12 text-lg md:text-xl text-neutral-400 font-light leading-relaxed font-sans">
+                <div className="space-y-8 text-lg md:text-xl text-muted-foreground leading-relaxed">
                     <MotionWrapper type="slide-up" delay={0.3}>
-                        <p className="border-l-2 border-cyan-500/50 pl-6">
-                            BonchTech is not just a dev shop. It is an <strong className="text-white">agentic operation</strong> designed to bridge the gap between human creativity and autonomous execution.
+                        <p className="border-l-4 border-primary/50 pl-6">
+                            Hey, I&apos;m <strong className="text-foreground">Frankleen</strong>. I started Unplug because I was tired of feeling like my phone was living my life for me.
                         </p>
                     </MotionWrapper>
 
                     <MotionWrapper type="slide-up" delay={0.4}>
                         <p>
-                            We specialize in building self-healing infrastructure, autonomous coding agents, and high-performance web systems that live and breathe.
-                            The mission is simple: <strong className="text-white">To remove the friction between thought and deployment.</strong>
+                            I used to check my screen time and see 7+ hours staring back at me. Notifications controlled my mornings. Doom-scrolling ate my evenings. I knew something had to change — and once I started making changes, I realized how many other people felt the same way.
                         </p>
                     </MotionWrapper>
 
                     <MotionWrapper type="slide-up" delay={0.5}>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 bg-white/5 border border-white/10 p-8 rounded-none">
-                            <div>
-                                <h3 className="text-white font-mono font-bold mb-4 flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-cyan-500 rounded-full" />
-                                    CORE_PROTOCOLS
-                                </h3>
-                                <ul className="space-y-2 text-sm font-mono text-neutral-500">
-                                    <li>- Next.js / React Server Components</li>
-                                    <li>- Python Automation Scripts</li>
-                                    <li>- n8n Workflow Orchestration</li>
-                                    <li>- Vector Database Memory</li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h3 className="text-white font-mono font-bold mb-4 flex items-center gap-2">
-                                    <span className="w-2 h-2 bg-purple-500 rounded-full" />
-                                    CURRENT_STATUS
-                                </h3>
-                                <p className="text-sm text-neutral-500 mb-4">
-                                    Operating at 100% capacity. Integrating new neural modules for enhanced generative design.
-                                </p>
-                            </div>
+                        <p>
+                            This blog is about <strong className="text-foreground">practical digital minimalism</strong> — not about going off-grid or throwing your phone in a lake. It&apos;s about being intentional. Choosing what gets your attention. Taking back control, one habit at a time.
+                        </p>
+                    </MotionWrapper>
+
+                    <MotionWrapper type="slide-up" delay={0.6}>
+                        <div className="bg-card border border-border/50 p-8 rounded-2xl mt-12">
+                            <h3 className="text-foreground font-bold mb-6 text-xl font-serif">What you&apos;ll find here:</h3>
+                            <ul className="space-y-4 text-base">
+                                <li className="flex items-start gap-3">
+                                    <span className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
+                                    <span><strong className="text-foreground">Dumb phone reviews</strong> — honest breakdowns of Light Phone, Punkt, and more</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
+                                    <span><strong className="text-foreground">Digital detox guides</strong> — step-by-step methods that actually work</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
+                                    <span><strong className="text-foreground">Screen time science</strong> — what the research says about our brains on phones</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="w-2 h-2 bg-accent rounded-full mt-2.5 shrink-0" />
+                                    <span><strong className="text-foreground">Real talk</strong> — no judgment, no extremism, just honesty about living with less noise</span>
+                                </li>
+                            </ul>
                         </div>
+                    </MotionWrapper>
+
+                    <MotionWrapper type="slide-up" delay={0.7}>
+                        <p className="text-center mt-12 text-base text-muted-foreground">
+                            Questions? Ideas? Want to share your own unplugging story?
+                            <br />
+                            Reach out at <a href="mailto:hello@bonchtech.tech" className="text-primary hover:underline">hello@bonchtech.tech</a>
+                        </p>
                     </MotionWrapper>
                 </div>
             </div>

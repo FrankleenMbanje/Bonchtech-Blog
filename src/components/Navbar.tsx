@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { Sun, Moon, Menu, X } from 'lucide-react';
 import { useTheme } from "next-themes";
 import { useEffect, useState } from 'react';
@@ -33,24 +32,15 @@ export default function Navbar() {
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-                scrolled ? 'glass border-b border-border/50 shadow-sm' : 'bg-transparent'
-            }`}
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'glass border-b border-border/50 shadow-sm' : 'bg-transparent'
+                }`}
         >
             <nav className="max-w-6xl mx-auto px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2">
-                        <div className="w-8 h-8 relative">
-                            <Image
-                                src="/logo.svg"
-                                alt="BonchTech"
-                                fill
-                                className="object-contain"
-                                priority
-                            />
-                        </div>
-                        <span className="font-bold text-xl text-foreground">BonchTech</span>
+                        <span className="text-2xl">📵</span>
+                        <span className="font-bold text-xl text-foreground font-serif">Unplug</span>
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -101,14 +91,6 @@ export default function Navbar() {
                             </button>
                         )}
 
-                        {/* CTA Button */}
-                        <Link
-                            href="mailto:contact@bonch.tech"
-                            className="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors btn-shine"
-                        >
-                            Contact
-                        </Link>
-
                         {/* Mobile Menu Button */}
                         <button
                             className="md:hidden p-2 rounded-lg hover:bg-secondary text-muted-foreground transition-colors"
@@ -141,13 +123,6 @@ export default function Navbar() {
                                     {link.label}
                                 </Link>
                             ))}
-                            <Link
-                                href="mailto:contact@bonch.tech"
-                                className="block w-full text-center px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/90 transition-colors mt-4"
-                                onClick={() => setMobileMenuOpen(false)}
-                            >
-                                Contact
-                            </Link>
                         </div>
                     </motion.div>
                 )}

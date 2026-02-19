@@ -18,8 +18,9 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "BonchTech | Modern Tech Blog",
-  description: "Deep dives into software development, AI, and future tech.",
+  title: "Unplug | Digital Minimalism Blog",
+  description: "Reclaim your attention. A blog about living intentionally in a hyperconnected world — dumb phones, digital detox, and the art of doing less.",
+  keywords: ["digital minimalism", "dumb phones", "digital detox", "screen time", "popcorn brain", "light phone", "intentional living"],
 };
 
 export default function RootLayout({
