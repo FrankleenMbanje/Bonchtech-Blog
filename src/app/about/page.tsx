@@ -1,73 +1,82 @@
-import Navbar from "@/components/Navbar";
+import MotionWrapper from "@/components/MotionWrapper";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
-export default function About() {
+export default function AboutPage() {
     return (
-        <main className="min-h-screen bg-background">
-            <Navbar />
+        <main className="min-h-screen bg-background text-foreground pt-32 pb-20 px-6 overflow-hidden relative">
+            {/* Background */}
+            <div className="absolute inset-0 z-0 pointer-events-none">
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4" />
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-accent/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4" />
+            </div>
 
-            <article className="max-w-2xl mx-auto px-6 pt-32 pb-20">
-                <h1 className="text-3xl md:text-4xl font-bold text-foreground font-serif mb-8">
-                    About
-                </h1>
+            <div className="max-w-3xl mx-auto relative z-10">
+                <MotionWrapper type="fade-in" delay={0.1}>
+                    <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 text-sm">
+                        <ArrowLeft className="w-4 h-4" />
+                        Back to Home
+                    </Link>
+                </MotionWrapper>
 
-                <div className="prose prose-lg dark:prose-invert max-w-none">
-                    <p>
-                        Hi, I&apos;m <strong>Frankleen</strong>.
-                    </p>
+                <MotionWrapper type="slide-up" delay={0.2}>
+                    <h1 className="text-5xl md:text-7xl font-bold mb-8 tracking-tight font-serif">
+                        About <span className="text-gradient">Unplug.</span>
+                    </h1>
+                </MotionWrapper>
 
-                    <p>
-                        I started Unplug because I noticed something happening to my brain.
-                        I couldn&apos;t read a full article without checking my phone. I&apos;d pick
-                        it up, scroll for 30 seconds, put it down, and forget what I was
-                        doing before. This was happening dozens of times a day.
-                    </p>
+                <div className="space-y-8 text-lg md:text-xl text-muted-foreground leading-relaxed">
+                    <MotionWrapper type="slide-up" delay={0.3}>
+                        <p className="border-l-4 border-primary/50 pl-6">
+                            Hey, I&apos;m <strong className="text-foreground">Frankleen</strong>. I started Unplug because I was tired of feeling like my phone was living my life for me.
+                        </p>
+                    </MotionWrapper>
 
-                    <p>
-                        So I started experimenting. I deleted social apps. I bought a dumb
-                        phone for weekends. I sat with boredom until it stopped being
-                        uncomfortable. Slowly, things changed. My attention came back.
-                        My sleep improved. I started reading books again — full books,
-                        cover to cover.
-                    </p>
+                    <MotionWrapper type="slide-up" delay={0.4}>
+                        <p>
+                            I used to check my screen time and see 7+ hours staring back at me. Notifications controlled my mornings. Doom-scrolling ate my evenings. I knew something had to change — and once I started making changes, I realized how many other people felt the same way.
+                        </p>
+                    </MotionWrapper>
 
-                    <p>
-                        This blog is where I write about what I&apos;ve learned. Not as a
-                        guru or expert — just as someone who went through it and wants
-                        to share what actually works.
-                    </p>
+                    <MotionWrapper type="slide-up" delay={0.5}>
+                        <p>
+                            This blog is about <strong className="text-foreground">practical digital minimalism</strong> — not about going off-grid or throwing your phone in a lake. It&apos;s about being intentional. Choosing what gets your attention. Taking back control, one habit at a time.
+                        </p>
+                    </MotionWrapper>
 
-                    <h2 className="font-serif">What You&apos;ll Find Here</h2>
+                    <MotionWrapper type="slide-up" delay={0.6}>
+                        <div className="bg-card border border-border/50 p-8 rounded-2xl mt-12">
+                            <h3 className="text-foreground font-bold mb-6 text-xl font-serif">What you&apos;ll find here:</h3>
+                            <ul className="space-y-4 text-base">
+                                <li className="flex items-start gap-3">
+                                    <span className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
+                                    <span><strong className="text-foreground">Dumb phone reviews</strong> — honest breakdowns of Light Phone, Punkt, and more</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
+                                    <span><strong className="text-foreground">Digital detox guides</strong> — step-by-step methods that actually work</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
+                                    <span><strong className="text-foreground">Screen time science</strong> — what the research says about our brains on phones</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="w-2 h-2 bg-accent rounded-full mt-2.5 shrink-0" />
+                                    <span><strong className="text-foreground">Real talk</strong> — no judgment, no extremism, just honesty about living with less noise</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </MotionWrapper>
 
-                    <ul>
-                        <li>Research-backed articles on screen time and brain health</li>
-                        <li>Practical strategies for reducing digital noise</li>
-                        <li>Dumb phone reviews and low-tech tool recommendations</li>
-                        <li>Honest writing about the hard parts of disconnecting</li>
-                    </ul>
-
-                    <p>
-                        No dramatic &quot;throw your phone in the ocean&quot; advice. Just
-                        small, sustainable changes that add up.
-                    </p>
-
-                    <hr />
-
-                    <p className="text-muted-foreground">
-                        Want to get in touch? Reach me at{" "}
-                        <a href="mailto:hello@bonchtech.tech" className="text-primary hover:text-foreground transition-colors">
-                            hello@bonchtech.tech
-                        </a>
-                    </p>
+                    <MotionWrapper type="slide-up" delay={0.7}>
+                        <p className="text-center mt-12 text-base text-muted-foreground">
+                            Questions? Ideas? Want to share your own unplugging story?
+                            <br />
+                            Reach out at <a href="mailto:hello@bonchtech.tech" className="text-primary hover:underline">hello@bonchtech.tech</a>
+                        </p>
+                    </MotionWrapper>
                 </div>
-            </article>
-
-            {/* Minimal footer */}
-            <footer className="border-t border-border">
-                <div className="max-w-2xl mx-auto px-6 py-8 flex justify-between items-center text-xs text-muted-foreground">
-                    <span>© {new Date().getFullYear()} Unplug</span>
-                    <span>by Frankleen</span>
-                </div>
-            </footer>
+            </div>
         </main>
     );
 }
