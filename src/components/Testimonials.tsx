@@ -1,7 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { Quote } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const testimonials = [
     {
@@ -23,58 +23,65 @@ const testimonials = [
 
 export default function Testimonials() {
     return (
-        <section className="py-24 bg-muted/30">
-            <div className="max-w-6xl mx-auto px-6 lg:px-8">
-                {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="text-center mb-16"
-                >
-                    <span className="text-sm font-semibold text-primary uppercase tracking-wider">Perspective</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-3 font-serif">
-                        What People Are Realizing
-                    </h2>
-                    <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-                        The conversation around screen time is shifting. Here&apos;s what thoughtful voices are saying.
-                    </p>
-                </motion.div>
+        <section className="py-24 bg-background overflow-hidden">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12">
 
-                {/* Testimonials Grid */}
-                <div className="grid md:grid-cols-3 gap-8">
+                {/* Section header — layered, asymmetric */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
+                    <div className="max-w-xl">
+                        <div className="flex items-center gap-3 mb-6">
+                            <span className="accent-bar" />
+                            <span className="text-xs font-medium tracking-[0.12em] uppercase text-accent">
+                                Perspectives
+                            </span>
+                        </div>
+                        <h2 className="font-serif font-bold text-foreground text-3xl md:text-5xl tracking-tight leading-tight">
+                            The space between <br />
+                            <span className="text-primary italic">connected</span> and <span className="text-primary italic">present</span>.
+                        </h2>
+                    </div>
+                    <p className="text-muted-foreground max-w-sm leading-relaxed border-l border-border pl-6 italic">
+                        The conversation around screen time is shifting. Here's what thoughtful voices are saying.
+                    </p>
+                </div>
+
+                {/* Perspective cards — layered depth */}
+                <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
                     {testimonials.map((testimonial, index) => (
                         <motion.div
                             key={index}
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className="relative bg-card rounded-2xl p-8 border border-border/50 hover:border-primary/30 transition-all duration-300"
+                            viewport={{ once: true, margin: "-100px" }}
+                            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
+                            className="card-elevated p-8 lg:p-10 flex flex-col relative group"
                         >
-                            {/* Quote Icon */}
-                            <div className="absolute -top-4 left-8 w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                                <Quote size={14} className="text-white" />
+                            {/* Decorative Quote Mark */}
+                            <div className="absolute top-6 right-8 opacity-[0.05] group-hover:opacity-[0.08] transition-opacity">
+                                <Quote size={64} className="text-primary" />
                             </div>
 
-                            {/* Quote */}
-                            <p className="text-foreground leading-relaxed mb-6 italic font-serif text-lg">
-                                &ldquo;{testimonial.quote}&rdquo;
-                            </p>
+                            {/* Quote content */}
+                            <blockquote className="relative z-10 flex-1">
+                                <p className="font-serif text-lg lg:text-xl text-foreground leading-relaxed italic mb-8">
+                                    &ldquo;{testimonial.quote}&rdquo;
+                                </p>
+                            </blockquote>
 
-                            {/* Author */}
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold">
+                            {/* Author info */}
+                            <footer className="relative z-10 pt-8 border-t border-border mt-auto flex items-center gap-4">
+                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center text-primary font-bold font-serif text-sm">
                                     {testimonial.author.charAt(0)}
                                 </div>
                                 <div>
-                                    <div className="font-semibold text-foreground">{testimonial.author}</div>
-                                    <div className="text-sm text-muted-foreground">
+                                    <cite className="not-italic font-bold text-foreground text-sm tracking-wide">
+                                        {testimonial.author}
+                                    </cite>
+                                    <div className="text-xs text-muted-foreground mt-0.5 uppercase tracking-wider font-medium">
                                         {testimonial.role}
                                     </div>
                                 </div>
-                            </div>
+                            </footer>
                         </motion.div>
                     ))}
                 </div>

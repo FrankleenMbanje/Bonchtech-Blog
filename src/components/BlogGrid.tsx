@@ -2,119 +2,145 @@
 
 import Link from 'next/link';
 import { Post } from '@/lib/blog';
-import { motion } from 'framer-motion';
 import { ArrowUpRight, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 function calculateReadingTime(content: string): string {
-    const wordsPerMinute = 200;
     const words = content.trim().split(/\s+/).length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return `${minutes} min read`;
+    return `${Math.ceil(words / 200)} min`;
 }
 
 export default function BlogGrid({ posts }: { posts: Post[] }) {
     if (!posts || posts.length === 0) return null;
 
     return (
-        <section className="py-24 bg-background">
-            <div className="max-w-6xl mx-auto px-6 lg:px-8">
-                {/* Section Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5 }}
-                    className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-12"
-                >
+        <section className="py-16 pb-28 bg-background">
+            <div className="max-w-7xl mx-auto px-6 lg:px-12">
+
+                {/* Header row */}
+                <div className="flex items-end justify-between mb-12">
                     <div>
-                        <span className="text-sm font-semibold text-primary uppercase tracking-wider">Latest</span>
-                        <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-3 font-serif">
+                        <div className="flex items-center gap-3 mb-4">
+                            <span className="accent-bar" />
+                            <span className="text-xs font-medium tracking-[0.12em] uppercase text-accent">
+                                Latest
+                            </span>
+                        </div>
+                        <h2 className="font-serif font-bold text-foreground text-3xl md:text-4xl tracking-tight">
                             Recent Reads
                         </h2>
                     </div>
-                    <Link
-                        href="/blog"
-                        className="group inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors font-medium"
-                    >
-                        View All
-                        <ArrowUpRight size={16} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </Link>
-                </motion.div>
 
-                {/* Blog Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <Link href="/blog"
+                        className="hidden sm:inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors group/link">
+                        <span>View All</span>
+                        <ArrowUpRight size={15} className="transition-transform duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                    </Link>
+                </div>
+
+                {/* Grid — intentionally asymmetric: featured large + small cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {posts.map((post, index) => {
                         const readingTime = calculateReadingTime(post.content);
+                        const date = new Date(post.frontmatter.publishedAt).toLocaleDateString('en-US', {
+                            month: 'short', day: 'numeric', year: 'numeric'
+                        });
 
                         return (
                             <motion.article
                                 key={post.slug}
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                className="group relative bg-card rounded-2xl overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-300 hover-lift"
+                                viewport={{ once: true, margin: "-40px" }}
+                                transition={{
+                                    duration: 0.55,
+                                    delay: index * 0.07,
+                                    ease: [0.25, 0.1, 0.25, 1]
+                                }}
+                                className="group card-elevated overflow-hidden flex flex-col"
                             >
-                                {/* Thumbnail */}
-                                <Link
-                                    href={`/blog/${post.slug}`}
-                                    className="block relative h-52 overflow-hidden"
+                                {/* Card image */}
+                                <Link href={`/blog/${post.slug}`}
+                                    className="block relative overflow-hidden img-overlay"
+                                    style={{ height: '200px' }}
                                 >
-                                    <div className="absolute inset-0 bg-gradient-to-br from-muted to-secondary" />
-
                                     {post.frontmatter.image ? (
                                         <img
                                             src={post.frontmatter.image}
                                             alt={post.frontmatter.title}
-                                            className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105 grayscale-[20%] group-hover:grayscale-0"
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                                         />
                                     ) : (
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-primary/30 to-accent/30" />
-                                        </div>
+                                        <div className="w-full h-full"
+                                            style={{
+                                                background: `linear-gradient(135deg, 
+                                                    hsl(${140 + index * 20}, 25%, ${85 - index * 3}%) 0%, 
+                                                    hsl(${20 + index * 15}, 35%, ${80 - index * 2}%) 100%)`
+                                            }}
+                                        />
                                     )}
 
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                                    <div className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white/95 dark:bg-card/95 flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 shadow-lg backdrop-blur-sm">
-                                        <ArrowUpRight size={18} className="text-foreground" />
+                                    {/* Category pill on image */}
+                                    <div className="absolute bottom-4 left-4 z-10">
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-white/90 dark:bg-card/90 text-foreground">
+                                            {post.frontmatter.category || 'Digital Minimalism'}
+                                        </span>
                                     </div>
                                 </Link>
 
-                                {/* Content */}
-                                <div className="p-6">
-                                    <div className="flex items-center justify-between mb-3">
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                                            {post.frontmatter.category || 'Digital Minimalism'}
-                                        </span>
-                                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                            <Clock size={12} />
+                                {/* Card body */}
+                                <div className="p-6 flex flex-col flex-1">
+                                    {/* Meta */}
+                                    <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
+                                        <span>{date}</span>
+                                        <span className="w-1 h-1 rounded-full bg-border" />
+                                        <div className="flex items-center gap-1">
+                                            <Clock size={10} />
                                             <span>{readingTime}</span>
                                         </div>
                                     </div>
 
-                                    <h3 className="text-lg font-bold text-foreground mb-3 leading-snug group-hover:text-primary transition-colors duration-300 line-clamp-2 font-serif">
+                                    {/* Title */}
+                                    <h3 className="font-serif font-bold text-foreground leading-snug mb-3 group-hover:text-primary transition-colors duration-200"
+                                        style={{ fontSize: '1.0625rem' }}>
                                         <Link href={`/blog/${post.slug}`}>
                                             {post.frontmatter.title}
                                         </Link>
                                     </h3>
 
-                                    <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                                    {/* Description */}
+                                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-5 flex-1">
                                         {post.frontmatter.description}
                                     </p>
 
-                                    <div className="mt-4 pt-4 border-t border-border/50 flex items-center gap-3">
-                                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold ring-2 ring-background">
-                                            {post.frontmatter.author.charAt(0)}
+                                    {/* Footer row */}
+                                    <div className="flex items-center justify-between pt-4 border-t border-border">
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary/80 to-accent/80 flex items-center justify-center text-white text-[10px] font-bold">
+                                                {post.frontmatter.author?.charAt(0) ?? 'F'}
+                                            </div>
+                                            <span className="text-xs text-muted-foreground">
+                                                {post.frontmatter.author}
+                                            </span>
                                         </div>
-                                        <span className="text-sm font-medium text-muted-foreground">
-                                            {post.frontmatter.author}
-                                        </span>
+
+                                        <Link href={`/blog/${post.slug}`}
+                                            className="inline-flex items-center gap-1 text-xs font-semibold text-primary group/cta">
+                                            <span>Read</span>
+                                            <ArrowUpRight size={12} className="transition-transform duration-200 group-hover/cta:translate-x-0.5 group-hover/cta:-translate-y-0.5" />
+                                        </Link>
                                     </div>
                                 </div>
                             </motion.article>
                         );
                     })}
+                </div>
+
+                {/* Mobile "View All" */}
+                <div className="mt-10 text-center sm:hidden">
+                    <Link href="/blog" className="btn-ghost">
+                        View All Articles
+                    </Link>
                 </div>
             </div>
         </section>

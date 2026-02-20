@@ -13,7 +13,7 @@ export default function Home() {
   const remainingPosts = posts.slice(1, 7);
 
   return (
-    <main className="min-h-screen bg-background relative">
+    <main className="min-h-screen bg-background">
       {/* Hero */}
       <SimpleHero />
 
@@ -31,64 +31,93 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-card border-t border-border">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {/* Brand */}
+        <div className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-12">
+
+            {/* Brand column */}
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-2xl">📵</span>
-                <span className="font-bold text-xl text-foreground font-serif">Unplug</span>
+              <div className="flex items-center gap-2.5 mb-5">
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-sm font-bold font-serif">
+                  U
+                </div>
+                <span className="font-serif font-bold text-xl text-foreground tracking-tight">
+                  Unplug
+                </span>
               </div>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                A blog about living intentionally in a hyperconnected world. Less noise, more life.
+              <p className="text-muted-foreground text-sm leading-relaxed max-w-xs">
+                A blog about living intentionally in a hyperconnected world.
+                Written by Frankleen for thoughtful people tired of digital noise.
+              </p>
+
+              {/* Decorative tagline */}
+              <p className="text-xs text-muted-foreground/70 mt-6 tracking-[0.08em] uppercase">
+                Less noise, more life.
               </p>
             </div>
 
-            {/* Quick Links */}
+            {/* Explore links */}
             <div>
-              <h4 className="text-foreground font-semibold mb-4 text-sm uppercase tracking-wider">Explore</h4>
+              <h4 className="text-foreground font-semibold mb-5 text-xs uppercase tracking-[0.1em]">
+                Explore
+              </h4>
               <ul className="space-y-3">
-                <li>
-                  <Link href="/blog" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                    All Articles
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-                    About Unplug
-                  </Link>
-                </li>
+                {[
+                  { label: 'All Articles', href: '/blog' },
+                  { label: 'Start Here', href: '/start-here' },
+                  { label: 'Phone Finder', href: '/phone-finder' },
+                  { label: 'About Frankleen', href: '/about' },
+                ].map(({ label, href }) => (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm link-underline"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
 
             {/* Topics */}
             <div>
-              <h4 className="text-foreground font-semibold mb-4 text-sm uppercase tracking-wider">Topics</h4>
+              <h4 className="text-foreground font-semibold mb-5 text-xs uppercase tracking-[0.1em]">
+                Topics
+              </h4>
               <ul className="space-y-3">
-                <li>
-                  <span className="text-muted-foreground text-sm">Dumb Phone Reviews</span>
-                </li>
-                <li>
-                  <span className="text-muted-foreground text-sm">Digital Detox</span>
-                </li>
-                <li>
-                  <span className="text-muted-foreground text-sm">Screen Time & Science</span>
-                </li>
-                <li>
-                  <span className="text-muted-foreground text-sm">Intentional Living</span>
-                </li>
+                {[
+                  'Dumb Phone Reviews',
+                  'Digital Detox',
+                  'Screen Time & Science',
+                  'Intentional Living',
+                ].map((topic) => (
+                  <li key={topic}>
+                    <span className="text-muted-foreground text-sm">{topic}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
 
-          {/* Bottom Bar */}
-          <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">
-              &copy; {new Date().getFullYear()} Unplug. Built with intention.
+          {/* Bottom bar */}
+          <div className="mt-14 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} Unplug · Built with intention by Frankleen
             </p>
-            <p className="text-sm text-muted-foreground">
-              by Frankleen
-            </p>
+            <div className="flex items-center gap-6">
+              {[
+                { label: 'Privacy', href: '/privacy' },
+                { label: 'Terms', href: '/terms' },
+              ].map(({ label, href }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </footer>

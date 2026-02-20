@@ -1,10 +1,11 @@
 import { notFound } from "next/navigation";
 import { getPostBySlug, getPosts } from "@/lib/blog";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import { ArrowLeft, Clock, Calendar, Share2, Bookmark, Twitter, Linkedin, Facebook } from "lucide-react";
+import { ArrowLeft, Clock, Calendar, Share2, Twitter, Linkedin, Facebook } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
+import Navbar from "@/components/Navbar";
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -22,7 +23,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
         title: `${frontmatter.title} | Unplug`,
         description: frontmatter.description,
-        keywords: [frontmatter.category, "digital minimalism", "screen time", "intentional living"],
         authors: [{ name: frontmatter.author }],
         openGraph: {
             title: frontmatter.title,
@@ -30,20 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             type: "article",
             publishedTime: frontmatter.publishedAt,
             authors: [frontmatter.author],
-            images: frontmatter.image ? [
-                {
-                    url: frontmatter.image,
-                    width: 1200,
-                    height: 630,
-                    alt: frontmatter.title,
-                },
-            ] : [],
-        },
-        twitter: {
-            card: "summary_large_image",
-            title: frontmatter.title,
-            description: frontmatter.description,
-            images: frontmatter.image ? [frontmatter.image] : [],
+            images: frontmatter.image ? [{ url: frontmatter.image, alt: frontmatter.title }] : [],
         },
     };
 }
@@ -63,19 +50,11 @@ function calculateReadingTime(content: string): number {
     return Math.ceil(words / wordsPerMinute);
 }
 
-// Get related articles
-function getRelatedPosts(currentSlug: string, category: string, count: number = 3) {
-    const allPosts = getPosts();
-    return allPosts
-        .filter(post => post.slug !== currentSlug && post.frontmatter.category === category)
-        .slice(0, count);
-}
-
-// Single author — Frankleen
+// Single author data
 const authorData = {
     name: "Frankleen",
-    bio: "Writing about living intentionally in a hyperconnected world. Dumb phones, screen time, and the art of doing less.",
     role: "Digital Minimalism Writer",
+    bio: "Writing about living intentionally in a hyperconnected world. Dumb phones, screen time, and the art of doing less."
 };
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
@@ -87,291 +66,205 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
     }
 
     const readingTime = calculateReadingTime(post.content);
-    const relatedPosts = getRelatedPosts(post.slug, post.frontmatter.category);
-
-    // Generate JSON-LD structured data
-    const jsonLd = {
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        headline: post.frontmatter.title,
-        description: post.frontmatter.description,
-        image: post.frontmatter.image,
-        datePublished: post.frontmatter.publishedAt,
-        dateModified: post.frontmatter.publishedAt,
-        author: {
-            "@type": "Person",
-            name: "Frankleen",
-            jobTitle: authorData.role,
-        },
-        publisher: {
-            "@type": "Organization",
-            name: "Unplug",
-        },
-        mainEntityOfPage: {
-            "@type": "WebPage",
-            "@id": `https://bonchtech.tech/blog/${post.slug}`,
-        },
-    };
+    const date = new Date(post.frontmatter.publishedAt).toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+    });
 
     return (
-        <>
-            {/* JSON-LD Structured Data */}
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+        <main className="min-h-screen bg-background">
+            <Navbar />
 
-            <article className="min-h-screen bg-background">
-                {/* Reading Progress Bar */}
-                <div className="reading-progress" id="reading-progress" />
+            {/* Reading progress bar */}
+            <div className="fixed top-0 left-0 w-full h-1 z-[60] pointer-events-none">
+                <div id="reading-bar" className="h-full bg-primary transition-all duration-150 w-0" />
+            </div>
 
-                {/* Hero Section */}
-                <header className="relative">
-                    {/* Background Image */}
-                    {post.frontmatter.image && (
-                        <div className="absolute inset-0 h-[70vh] min-h-[500px]">
-                            <Image
-                                src={post.frontmatter.image}
-                                alt={post.frontmatter.title}
-                                fill
-                                className="object-cover"
-                                priority
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent" />
-                        </div>
-                    )}
+            {/* Header / Hero */}
+            <div className="relative pt-32 pb-16 lg:pt-48 lg:pb-24 px-6 lg:px-12 border-b border-border mb-12 lg:mb-20 overflow-hidden">
+                {/* Background decorative elements */}
+                <div aria-hidden className="absolute inset-0 pointer-events-none -z-10">
+                    <div className="absolute top-[20%] right-[10%] w-px h-[200px] bg-gradient-to-b from-transparent via-border to-transparent opacity-40" />
+                    <div className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full opacity-[0.04]"
+                        style={{ background: 'radial-gradient(circle, #4a7c59 0%, transparent 70%)' }} />
+                </div>
 
-                    {/* Navigation */}
-                    <nav className="relative z-10 px-6 lg:px-8 py-6">
-                        <div className="max-w-4xl mx-auto">
-                            <Link
-                                href="/blog"
-                                className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-                            >
-                                <ArrowLeft className="w-4 h-4" />
-                                <span>Back to all articles</span>
-                            </Link>
-                        </div>
-                    </nav>
+                <div className="max-w-4xl mx-auto">
+                    {/* Back link */}
+                    <div className="mb-10">
+                        <Link href="/blog" className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors text-xs font-medium uppercase tracking-widest group">
+                            <ArrowLeft className="w-3 h-3 transition-transform group-hover:-translate-x-1" />
+                            Return to Archive
+                        </Link>
+                    </div>
 
-                    {/* Article Header */}
-                    <div className={`relative z-10 px-6 lg:px-8 ${post.frontmatter.image ? 'pt-32' : 'pt-16'} pb-16`}>
-                        <div className="max-w-4xl mx-auto">
-                            {/* Category & Meta */}
-                            <div className="flex flex-wrap items-center gap-4 mb-6">
-                                <span className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
-                                    {post.frontmatter.category || 'Digital Minimalism'}
-                                </span>
-                                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                    <span className="flex items-center gap-1.5">
-                                        <Calendar className="w-4 h-4" />
-                                        {new Date(post.frontmatter.publishedAt).toLocaleDateString('en-US', {
-                                            month: 'long',
-                                            day: 'numeric',
-                                            year: 'numeric',
-                                        })}
-                                    </span>
-                                    <span className="flex items-center gap-1.5">
-                                        <Clock className="w-4 h-4" />
-                                        {readingTime} min read
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Title */}
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 text-balance font-serif">
-                                {post.frontmatter.title}
-                            </h1>
-
-                            {/* Description */}
-                            <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed mb-8 text-balance">
-                                {post.frontmatter.description}
-                            </p>
-
-                            {/* Author Preview */}
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-lg">
-                                    F
-                                </div>
-                                <div>
-                                    <p className="font-semibold text-foreground">Frankleen</p>
-                                    <p className="text-sm text-muted-foreground">{authorData.role}</p>
-                                </div>
-                            </div>
+                    {/* Metadata */}
+                    <div className="flex items-center gap-3 mb-8">
+                        <span className="pill">{post.frontmatter.category || 'Digital Minimalism'}</span>
+                        <span className="text-muted-foreground/30">•</span>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground uppercase tracking-widest font-semibold">
+                            <Clock size={12} className="text-primary/60" />
+                            <span>{readingTime} min read</span>
                         </div>
                     </div>
-                </header>
 
-                {/* Article Content */}
-                <div className="px-6 lg:px-8 py-16">
-                    <div className="max-w-4xl mx-auto">
-                        {/* Share Buttons */}
-                        <div className="flex items-center gap-2 mb-12 pb-8 border-b border-border">
-                            <span className="text-sm text-muted-foreground mr-2">Share:</span>
-                            <a
-                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.frontmatter.title)}&url=${encodeURIComponent(`https://bonchtech.tech/blog/${post.slug}`)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-10 h-10 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary transition-all"
-                                aria-label="Share on Twitter"
-                            >
-                                <Twitter className="w-4 h-4" />
-                            </a>
-                            <a
-                                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://bonchtech.tech/blog/${post.slug}`)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-10 h-10 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary transition-all"
-                                aria-label="Share on LinkedIn"
-                            >
-                                <Linkedin className="w-4 h-4" />
-                            </a>
-                            <a
-                                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://bonchtech.tech/blog/${post.slug}`)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-10 h-10 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary transition-all"
-                                aria-label="Share on Facebook"
-                            >
-                                <Facebook className="w-4 h-4" />
-                            </a>
-                            <button
-                                className="w-10 h-10 rounded-lg border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-primary transition-all ml-auto"
-                                aria-label="Bookmark article"
-                            >
-                                <Bookmark className="w-4 h-4" />
-                            </button>
-                        </div>
+                    {/* Title */}
+                    <h1 className="font-serif font-bold text-foreground leading-[1.1] mb-8"
+                        style={{ fontSize: 'clamp(2.5rem, 7vw, 5rem)' }}>
+                        {post.frontmatter.title}
+                    </h1>
 
-                        {/* Main Content */}
-                        <div className="prose prose-lg dark:prose-invert max-w-none">
-                            <MDXRemote source={post.content} />
-                        </div>
+                    {/* Description / Introduction */}
+                    <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed max-w-3xl border-l-2 border-accent/30 pl-8 py-2">
+                        {post.frontmatter.description}
+                    </p>
 
-                        {/* Tags */}
-                        <div className="mt-12 pt-8 border-t border-border">
-                            <div className="flex flex-wrap gap-2">
-                                <span className="text-sm text-muted-foreground">Tags:</span>
-                                {[post.frontmatter.category || "Digital Minimalism", "Screen Time", "Intentional Living"].map((tag) => (
-                                    <span
-                                        key={tag}
-                                        className="px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-sm"
-                                    >
-                                        {tag}
-                                    </span>
-                                ))}
+                    {/* Post Meta */}
+                    <div className="flex items-center gap-6 mt-12 pt-10 border-t border-border">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-serif font-bold text-sm">
+                                F
                             </div>
-                        </div>
-
-                        {/* Author Bio */}
-                        <div className="mt-12 p-8 rounded-2xl bg-card border border-border">
-                            <div className="flex flex-col md:flex-row gap-6">
-                                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-2xl flex-shrink-0">
-                                    F
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="text-lg font-semibold text-foreground font-serif">
-                                        Written by Frankleen
-                                    </h3>
-                                    <p className="text-sm text-muted-foreground mb-4">{authorData.role}</p>
-                                    <p className="text-muted-foreground">{authorData.bio}</p>
-                                </div>
+                            <div>
+                                <div className="text-sm font-bold text-foreground">{authorData.name}</div>
+                                <div className="text-xs text-muted-foreground">{date}</div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                {/* Related Articles */}
-                {relatedPosts.length > 0 && (
-                    <section className="px-6 lg:px-8 py-16 border-t border-border bg-muted/30">
-                        <div className="max-w-4xl mx-auto">
-                            <h2 className="text-2xl font-bold text-foreground mb-8 font-serif">Related Reads</h2>
-                            <div className="grid md:grid-cols-3 gap-6">
-                                {relatedPosts.map((relatedPost) => (
-                                    <Link
-                                        key={relatedPost.slug}
-                                        href={`/blog/${relatedPost.slug}`}
-                                        className="group block"
-                                    >
-                                        <article className="bg-card rounded-xl overflow-hidden border border-border hover-lift">
-                                            {relatedPost.frontmatter.image && (
-                                                <div className="aspect-video relative">
-                                                    <Image
-                                                        src={relatedPost.frontmatter.image}
-                                                        alt={relatedPost.frontmatter.title}
-                                                        fill
-                                                        className="object-cover transition-transform duration-300 group-hover:scale-105"
-                                                    />
-                                                </div>
-                                            )}
-                                            <div className="p-4">
-                                                <span className="text-xs font-medium text-primary">
-                                                    {relatedPost.frontmatter.category}
-                                                </span>
-                                                <h3 className="font-semibold text-foreground mt-2 line-clamp-2 group-hover:text-primary transition-colors font-serif">
-                                                    {relatedPost.frontmatter.title}
-                                                </h3>
-                                            </div>
-                                        </article>
-                                    </Link>
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 pb-24 lg:grid lg:grid-cols-[1fr_250px] gap-20">
+                {/* Main Content Column */}
+                <article className="max-w-3xl">
+                    {/* Featured Image - Asymmetric offset */}
+                    {post.frontmatter.image && (
+                        <div className="relative mb-16 lg:-ml-20 lg:-mr-20 group">
+                            <div className="aspect-[16/9] relative rounded-2xl overflow-hidden img-overlay card-elevated">
+                                <Image
+                                    src={post.frontmatter.image}
+                                    alt={post.frontmatter.title}
+                                    fill
+                                    className="object-cover"
+                                    priority
+                                />
+                            </div>
+                            <div className="absolute top-4 right-4 bg-background/80 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-bold border border-border/50 text-foreground">
+                                Featured Visual
+                            </div>
+                        </div>
+                    )}
+
+                    {/* MDX Content */}
+                    <div className="prose prose-luxury">
+                        <MDXRemote source={post.content} />
+                    </div>
+
+                    {/* Share & Support Bottom Bar */}
+                    <div className="mt-20 pt-10 border-t border-border flex flex-wrap justify-between items-center gap-8">
+                        <div className="flex items-center gap-4">
+                            <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Share</span>
+                            <div className="flex gap-2">
+                                {[
+                                    { icon: <Twitter size={14} />, label: 'Twitter', href: '#' },
+                                    { icon: <Linkedin size={14} />, label: 'LinkedIn', href: '#' },
+                                    { icon: <Facebook size={14} />, label: 'Facebook', href: '#' },
+                                ].map((s) => (
+                                    <button key={s.label} className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-all">
+                                        {s.icon}
+                                    </button>
                                 ))}
                             </div>
                         </div>
-                    </section>
-                )}
-
-                {/* Newsletter CTA */}
-                <section className="px-6 lg:px-8 py-16 border-t border-border">
-                    <div className="max-w-2xl mx-auto text-center">
-                        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 font-serif">
-                            Enjoyed this article?
-                        </h2>
-                        <p className="text-muted-foreground mb-8">
-                            Get calm, clear thinking about intentional living delivered to your inbox. No spam, no noise.
-                        </p>
-                        <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                            <input
-                                type="email"
-                                placeholder="your@email.com"
-                                className="flex-1 px-4 py-3 rounded-lg bg-card border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
-                            />
-                            <button
-                                type="submit"
-                                className="px-6 py-3 bg-primary text-primary-foreground font-medium rounded-lg hover:bg-primary/90 transition-colors"
-                            >
-                                Subscribe
-                            </button>
-                        </form>
+                        <button className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary hover:text-accent transition-colors">
+                            <Share2 size={14} />
+                            <span>Copy link</span>
+                        </button>
                     </div>
-                </section>
 
-                {/* Footer */}
-                <footer className="px-6 lg:px-8 py-12 border-t border-border">
-                    <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-                        <p className="text-sm text-muted-foreground">
-                            © {new Date().getFullYear()} Unplug. Built with intention.
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                            by Frankleen
+                    {/* Author Box */}
+                    <div className="mt-16 p-8 lg:p-12 rounded-3xl bg-secondary/30 border border-border flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-bl-full pointer-events-none" />
+                        <div className="w-20 h-20 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-serif font-bold text-3xl flex-shrink-0">
+                            F
+                        </div>
+                        <div>
+                            <h4 className="font-serif font-bold text-xl text-foreground mb-2">Thoughts from {authorData.name}</h4>
+                            <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+                                {authorData.bio}
+                            </p>
+                            <Link href="/about" className="link-underline text-xs font-bold text-primary uppercase tracking-widest">
+                                Read more about my journey
+                            </Link>
+                        </div>
+                    </div>
+                </article>
+
+                {/* Sidebar Column (Desktop only or stack) */}
+                <aside className="hidden lg:block space-y-12">
+                    <div className="sticky top-32">
+                        {/* Summary Box */}
+                        <div className="p-6 rounded-2xl bg-card border border-border/50 shadow-sm mb-10">
+                            <h5 className="text-[10px] uppercase tracking-[0.2em] font-bold text-accent mb-4">Reading Overview</h5>
+                            <div className="space-y-4">
+                                <div>
+                                    <div className="text-xs text-muted-foreground mb-1">Time to read</div>
+                                    <div className="font-serif font-bold text-foreground">{readingTime} minutes</div>
+                                </div>
+                                <div>
+                                    <div className="text-xs text-muted-foreground mb-1">Topic</div>
+                                    <div className="font-serif font-bold text-foreground">{post.frontmatter.category || 'Mindset'}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Social Sidebar */}
+                        <div className="flex flex-col gap-4 pl-4 border-l border-border">
+                            <p className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60 mb-2">Connect</p>
+                            <a href="#" className="flex items-center gap-3 text-sm text-foreground hover:text-primary transition-colors font-medium">
+                                <Twitter size={14} />
+                                <span>Twitter</span>
+                            </a>
+                            <a href="#" className="flex items-center gap-3 text-sm text-foreground hover:text-primary transition-colors font-medium">
+                                <Linkedin size={14} />
+                                <span>Newsletter</span>
+                            </a>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            {/* Newsletter section reuse */}
+            <div className="border-t border-border">
+                {/* Simple footer for post page */}
+                <footer className="py-12 px-6 lg:px-12 bg-card/20 text-center">
+                    <div className="flex flex-col items-center gap-6">
+                        <Link href="/" className="flex items-center gap-2 group">
+                            <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold font-serif">U</div>
+                            <span className="font-serif font-semibold text-foreground group-hover:text-primary transition-colors uppercase tracking-[0.1em]">Unplug</span>
+                        </Link>
+                        <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
+                            © {new Date().getFullYear()} Unplug · Writing by Frankleen
                         </p>
                     </div>
                 </footer>
-            </article>
+            </div>
 
-            {/* Reading Progress Script */}
+            {/* Page specific scripts */}
             <script
                 dangerouslySetInnerHTML={{
                     __html: `
-                        document.addEventListener('scroll', () => {
-                            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                            const scrolled = (winScroll / height) * 100;
-                            const el = document.getElementById('reading-progress');
-                            if (el) el.style.width = scrolled + '%';
-                        });
-                    `,
+                        window.onscroll = function() {
+                            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                            var scrolled = (winScroll / height) * 100;
+                            var bar = document.getElementById("reading-bar");
+                            if (bar) bar.style.width = scrolled + "%";
+                        };
+                    `
                 }}
             />
-        </>
+        </main>
     );
 }

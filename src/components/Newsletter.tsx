@@ -1,106 +1,100 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Mail, ArrowRight, Check } from 'lucide-react';
 import { useState } from 'react';
+import { ArrowRight, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Newsletter() {
     const [email, setEmail] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
-        if (!email || !email.includes('@')) {
-            return;
-        }
-
-        setIsSubmitting(true);
-
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        setIsSubmitting(false);
-        setIsSubscribed(true);
-        setEmail('');
-
-        setTimeout(() => setIsSubscribed(false), 5000);
+        if (!email) return;
+        setSubmitted(true);
     };
 
     return (
-        <section className="py-24 bg-background">
-            <div className="max-w-6xl mx-auto px-6 lg:px-8">
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary/80 p-12 md:p-16"
-                >
-                    {/* Background decoration */}
-                    <div className="absolute inset-0 opacity-20">
-                        <div className="absolute top-0 right-0 w-96 h-96 bg-white/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+        <section className="py-24 bg-muted/40 relative overflow-hidden">
+            {/* Decorative background */}
+            <div aria-hidden className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-0 left-[40%] w-px h-full bg-gradient-to-b from-transparent via-border to-transparent opacity-50" />
+                <div className="absolute -bottom-24 -left-24 w-96 h-96 rounded-full opacity-[0.04]"
+                    style={{ background: 'radial-gradient(circle, #4a7c59 0%, transparent 70%)' }} />
+            </div>
+
+            <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+                <div className="max-w-xl">
+                    {/* Eyebrow */}
+                    <div className="flex items-center gap-3 mb-6">
+                        <span className="accent-bar" />
+                        <span className="text-xs font-medium tracking-[0.12em] uppercase text-accent">
+                            Newsletter
+                        </span>
                     </div>
 
-                    <div className="relative z-10 max-w-2xl mx-auto text-center">
-                        {/* Icon */}
-                        <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mx-auto mb-6">
-                            {isSubscribed ? (
-                                <Check size={28} className="text-white" />
-                            ) : (
-                                <Mail size={28} className="text-white" />
-                            )}
-                        </div>
+                    <h2 className="font-serif font-bold text-foreground text-3xl md:text-4xl tracking-tight mb-4">
+                        One email per week.
+                        <br />
+                        <span className="text-primary italic">No noise.</span>
+                    </h2>
 
-                        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 font-serif">
-                            {isSubscribed ? 'You\'re In!' : 'Join the Quiet Revolution'}
-                        </h2>
-                        <p className="text-white/80 text-lg mb-8">
-                            {isSubscribed
-                                ? 'Welcome aboard. You\'ll get our latest reads on living with less noise.'
-                                : 'One email per week. No noise, no spam — just calm, clear thinking about living with intention in a distracted world.'
-                            }
-                        </p>
+                    <p className="text-muted-foreground leading-relaxed mb-8">
+                        Practical ideas for a less distracted life — delivered every Sunday morning.
+                        No spam. No fluff. Unsubscribe anytime.
+                    </p>
 
-                        {/* Form */}
-                        {!isSubscribed && (
-                            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                    <AnimatePresence mode="wait">
+                        {submitted ? (
+                            <motion.div
+                                key="success"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="flex items-center gap-3 p-5 rounded-xl border border-primary/30 bg-primary/5"
+                            >
+                                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                                    <Check size={14} className="text-primary-foreground" />
+                                </div>
+                                <div>
+                                    <p className="font-semibold text-foreground">You&apos;re in!</p>
+                                    <p className="text-sm text-muted-foreground mt-0.5">
+                                        First issue arrives Sunday.
+                                    </p>
+                                </div>
+                            </motion.div>
+                        ) : (
+                            <motion.form
+                                key="form"
+                                initial={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onSubmit={handleSubmit}
+                                className="flex gap-3 flex-wrap sm:flex-nowrap"
+                            >
                                 <input
                                     type="email"
-                                    placeholder="your@email.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="you@example.com"
                                     required
-                                    className="flex-1 px-5 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-white/40 transition-colors"
+                                    className="flex-1 min-w-0 px-4 py-3 rounded-lg border border-border bg-card text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-shadow"
+                                    aria-label="Email address"
                                 />
                                 <button
                                     type="submit"
-                                    disabled={isSubmitting}
-                                    className="px-6 py-4 bg-white text-primary font-semibold rounded-xl hover:bg-white/90 transition-colors inline-flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+                                    className="btn-primary flex-shrink-0"
                                 >
-                                    {isSubmitting ? (
-                                        <>
-                                            <div className="w-5 h-5 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                                            Joining...
-                                        </>
-                                    ) : (
-                                        <>
-                                            Subscribe
-                                            <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-                                        </>
-                                    )}
+                                    <span>Subscribe</span>
+                                    <ArrowRight size={16} />
                                 </button>
-                            </form>
+                            </motion.form>
                         )}
+                    </AnimatePresence>
 
-                        {!isSubscribed && (
-                            <p className="text-white/60 text-sm mt-4">
-                                Unsubscribe anytime. Your attention is valuable — we respect it.
-                            </p>
-                        )}
-                    </div>
-                </motion.div>
+                    {/* Social proof */}
+                    <p className="mt-4 text-xs text-muted-foreground">
+                        Join thoughtful readers making intentional choices online.
+                    </p>
+                </div>
             </div>
         </section>
     );

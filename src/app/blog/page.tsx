@@ -1,119 +1,133 @@
-import Link from 'next/link';
-import { getPosts } from '@/lib/blog';
-import { Clock, ArrowUpRight, ArrowLeft } from 'lucide-react';
+import { getPosts } from "@/lib/blog";
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import { Clock, ArrowRight } from "lucide-react";
 
 function calculateReadingTime(content: string): string {
-    const wordsPerMinute = 200;
     const words = content.trim().split(/\s+/).length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return `${minutes} min read`;
+    return `${Math.ceil(words / 200)} min`;
 }
 
 export default function BlogPage() {
     const posts = getPosts();
 
     return (
-        <main className="min-h-screen bg-background pt-32 pb-20 px-6">
-            <div className="max-w-6xl mx-auto">
-                {/* Header */}
-                <div className="mb-12">
-                    <Link href="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-8 text-sm">
-                        <ArrowLeft className="w-4 h-4" />
-                        Home
-                    </Link>
-                    <h1 className="text-4xl md:text-5xl font-bold text-foreground mt-4 font-serif">
+        <main className="min-h-screen bg-background">
+            <Navbar />
+
+            {/* Page header */}
+            <div className="pt-40 pb-16 max-w-7xl mx-auto px-6 lg:px-12">
+                <div className="flex items-center gap-3 mb-6">
+                    <span className="accent-bar" />
+                    <span className="text-xs font-medium tracking-[0.12em] uppercase text-accent">
                         All Articles
-                    </h1>
-                    <p className="text-muted-foreground mt-4 text-lg max-w-2xl">
-                        Practical guides, honest reviews, and calm thinking about life in a hyperconnected world.
-                    </p>
+                    </span>
                 </div>
 
-                {/* Posts Grid */}
-                {posts.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {posts.map((post) => {
+                <h1 className="font-serif font-bold text-foreground tracking-tight mb-4"
+                    style={{ fontSize: 'clamp(2.25rem, 5vw, 3.75rem)' }}>
+                    The Archive
+                </h1>
+                <p className="text-muted-foreground text-lg max-w-lg leading-relaxed">
+                    Everything written so far — on smartphones, screen time,
+                    digital detox, and the art of choosing less.
+                </p>
+            </div>
+
+            {/* Divider */}
+            <div className="divider-organic max-w-7xl mx-auto px-6 lg:px-12" />
+
+            {/* Article list */}
+            <div className="max-w-7xl mx-auto px-6 lg:px-12 py-12">
+                {posts.length === 0 ? (
+                    <p className="text-muted-foreground py-12">No articles yet. Check back soon.</p>
+                ) : (
+                    <div className="divide-y divide-border">
+                        {posts.map((post, index) => {
                             const readingTime = calculateReadingTime(post.content);
+                            const date = new Date(post.frontmatter.publishedAt).toLocaleDateString('en-US', {
+                                year: 'numeric', month: 'long', day: 'numeric'
+                            });
 
                             return (
                                 <article
                                     key={post.slug}
-                                    className="group relative bg-card rounded-2xl overflow-hidden border border-border/50 hover:border-primary/30 transition-all duration-300 hover-lift"
+                                    className="group grid lg:grid-cols-[1fr_auto] gap-6 py-10 hover:bg-secondary/20 transition-colors duration-200 rounded-lg px-4 -mx-4"
+                                    style={{ animationDelay: `${index * 40}ms` }}
                                 >
-                                    {/* Thumbnail */}
-                                    <Link
-                                        href={`/blog/${post.slug}`}
-                                        className="block relative h-52 overflow-hidden"
-                                    >
-                                        <div className="absolute inset-0 bg-gradient-to-br from-muted to-secondary" />
-
-                                        {post.frontmatter.image ? (
-                                            <img
-                                                src={post.frontmatter.image}
-                                                alt={post.frontmatter.title}
-                                                className="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105"
-                                            />
-                                        ) : (
-                                            <div className="absolute inset-0 flex items-center justify-center">
-                                                <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-primary/30 to-accent/30" />
-                                            </div>
-                                        )}
-
-                                        <div className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white/95 dark:bg-card/95 flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 shadow-lg backdrop-blur-sm">
-                                            <ArrowUpRight size={18} className="text-foreground" />
-                                        </div>
-                                    </Link>
-
-                                    {/* Content */}
-                                    <div className="p-6">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
-                                                {post.frontmatter.category || 'Digital Minimalism'}
-                                            </span>
-                                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                                <Clock size={12} />
-                                                <span>{readingTime}</span>
+                                    <div className="flex flex-col gap-3">
+                                        {/* Category + meta */}
+                                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                            {post.frontmatter.category && (
+                                                <>
+                                                    <span className="pill">
+                                                        {post.frontmatter.category}
+                                                    </span>
+                                                    <span className="w-1 h-1 rounded-full bg-border" />
+                                                </>
+                                            )}
+                                            <span>{date}</span>
+                                            <span className="w-1 h-1 rounded-full bg-border" />
+                                            <div className="flex items-center gap-1">
+                                                <Clock size={10} />
+                                                <span>{readingTime} read</span>
                                             </div>
                                         </div>
 
-                                        <h2 className="text-lg font-bold text-foreground mb-3 leading-snug group-hover:text-primary transition-colors duration-300 line-clamp-2 font-serif">
+                                        {/* Title */}
+                                        <h2 className="font-serif font-bold text-foreground leading-snug group-hover:text-primary transition-colors duration-200"
+                                            style={{ fontSize: 'clamp(1.15rem, 2.5vw, 1.5rem)' }}>
                                             <Link href={`/blog/${post.slug}`}>
                                                 {post.frontmatter.title}
                                             </Link>
                                         </h2>
 
-                                        <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                                        {/* Description */}
+                                        <p className="text-muted-foreground leading-relaxed line-clamp-2 max-w-2xl">
                                             {post.frontmatter.description}
                                         </p>
+                                    </div>
 
-                                        <div className="mt-4 pt-4 border-t border-border/50 flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white text-xs font-bold ring-2 ring-background">
-                                                    {post.frontmatter.author.charAt(0)}
-                                                </div>
-                                                <span className="text-sm font-medium text-muted-foreground">
-                                                    {post.frontmatter.author}
-                                                </span>
-                                            </div>
-                                            <time className="text-xs text-muted-foreground">
-                                                {new Date(post.frontmatter.publishedAt).toLocaleDateString('en-US', {
-                                                    month: 'short',
-                                                    day: 'numeric',
-                                                    year: 'numeric'
-                                                })}
-                                            </time>
-                                        </div>
+                                    {/* Thumbnail + CTA */}
+                                    <div className="flex lg:flex-col items-start lg:items-end justify-between gap-6 lg:py-2">
+                                        {post.frontmatter.image && (
+                                            <Link href={`/blog/${post.slug}`}
+                                                className="block flex-shrink-0 rounded-lg overflow-hidden img-overlay hover-lift"
+                                                style={{ width: '120px', height: '80px' }}
+                                            >
+                                                <img
+                                                    src={post.frontmatter.image}
+                                                    alt={post.frontmatter.title}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </Link>
+                                        )}
+
+                                        <Link href={`/blog/${post.slug}`}
+                                            className="inline-flex items-center gap-2 text-sm font-semibold text-primary flex-shrink-0 group/link">
+                                            <span>Read</span>
+                                            <ArrowRight size={14} className="transition-transform duration-200 group-hover/link:translate-x-1" />
+                                        </Link>
                                     </div>
                                 </article>
                             );
                         })}
                     </div>
-                ) : (
-                    <div className="text-center py-24">
-                        <p className="text-muted-foreground text-lg">No articles yet. Check back soon.</p>
-                    </div>
                 )}
             </div>
+
+            {/* Footer */}
+            <footer className="border-t border-border py-12 mt-8">
+                <div className="max-w-7xl mx-auto px-6 lg:px-12 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <Link href="/" className="flex items-center gap-2 group">
+                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold font-serif">U</div>
+                        <span className="font-serif font-semibold text-foreground group-hover:text-primary transition-colors">Unplug</span>
+                    </Link>
+                    <p className="text-xs text-muted-foreground">
+                        © {new Date().getFullYear()} Unplug · by Frankleen
+                    </p>
+                </div>
+            </footer>
         </main>
     );
 }
